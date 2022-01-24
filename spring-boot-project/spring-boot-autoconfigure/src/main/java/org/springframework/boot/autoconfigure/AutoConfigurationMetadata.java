@@ -23,6 +23,8 @@ import java.util.Set;
  *
  * @author Phillip Webb
  * @since 1.5.0
+ *
+ * 元数据文件中配置的对应实体类。
  */
 public interface AutoConfigurationMetadata {
 

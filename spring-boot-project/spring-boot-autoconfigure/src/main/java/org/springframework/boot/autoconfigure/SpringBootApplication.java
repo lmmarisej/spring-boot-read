@@ -59,7 +59,7 @@ public @interface SpringBootApplication {
 	 * Exclude specific auto-configuration classes such that they will never be applied.
 	 * @return the classes to exclude
 	 */
-	@AliasFor(annotation = EnableAutoConfiguration.class)
+	@AliasFor(annotation = EnableAutoConfiguration.class)		// @AliasFor用于桥接到其它类，annotation指定所桥接的注解类。优点：减少用户使用多注解带来的麻烦。
 	Class<?>[] exclude() default {};
 
 	/**
@@ -82,6 +82,8 @@ public @interface SpringBootApplication {
 	 * {@code @Enable...Repositories} annotations.
 	 * @return base packages to scan
 	 * @since 1.3.0
+	 *
+	 * 指定扫描的基础包，激活注解组件的初始化。
 	 */
 	@AliasFor(annotation = ComponentScan.class, attribute = "basePackages")
 	String[] scanBasePackages() default {};
@@ -100,6 +102,8 @@ public @interface SpringBootApplication {
 	 * {@code @Enable...Repositories} annotations.
 	 * @return base packages to scan
 	 * @since 1.3.0
+	 *
+	 * 指定扫描的类，用于初始化。
 	 */
 	@AliasFor(annotation = ComponentScan.class, attribute = "basePackageClasses")
 	Class<?>[] scanBasePackageClasses() default {};
@@ -125,8 +129,17 @@ public @interface SpringBootApplication {
 	 * equivalent to removing the {@code @Configuration} stereotype.
 	 * @since 2.2
 	 * @return whether to proxy {@code @Bean} methods
+	 *
+	 * 指定是否代理@Bean方法，以强制执行bean的声明周期。
+	 *
+	 * false：避免被CGLib处理，方法内部引用的类生产的类和 Spring 容器中类是两个类。例如，bean自包含可以使用。
+	 * true：代理实现使用同一个bean。
+	 * 		优点
+	 * 			性能提升。
+	 * 		缺点
+	 * 			所在类不能使用final。
 	 */
-	@AliasFor(annotation = Configuration.class)
-	boolean proxyBeanMethods() default true;
+	@AliasFor(annotation = Configuration.class)		// Configuration激活配配置类
+	boolean proxyBeanMethods() default true;		// cglib会为@Configuration生成一个代理类，引用该代理bean的对象每次都被引导到从IoC容器中获取bean。
 
 }

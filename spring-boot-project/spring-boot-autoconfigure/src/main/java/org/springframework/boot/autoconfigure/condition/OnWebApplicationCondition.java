@@ -55,6 +55,7 @@ class OnWebApplicationCondition extends FilteringSpringBootCondition {
 		for (int i = 0; i < outcomes.length; i++) {
 			String autoConfigurationClass = autoConfigurationClasses[i];
 			if (autoConfigurationClass != null) {
+				// 根据被注解的类或方法是否包含ConditionalOnWebApplication注解，判断是否为web应用
 				outcomes[i] = getOutcome(
 						autoConfigurationMetadata.get(autoConfigurationClass, "ConditionalOnWebApplication"));
 			}
@@ -88,10 +89,10 @@ class OnWebApplicationCondition extends FilteringSpringBootCondition {
 	public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 		boolean required = metadata.isAnnotated(ConditionalOnWebApplication.class.getName());
 		ConditionOutcome outcome = isWebApplication(context, metadata, required);
-		if (required && !outcome.isMatch()) {
+		if (required && !outcome.isMatch()) {		// 有ConditionalOnWebApplication注解，但却没有指定的web容器
 			return ConditionOutcome.noMatch(outcome.getConditionMessage());
 		}
-		if (!required && outcome.isMatch()) {
+		if (!required && outcome.isMatch()) {		// 没有ConditionalOnWebApplication注解，但却使用了web容器
 			return ConditionOutcome.noMatch(outcome.getConditionMessage());
 		}
 		return ConditionOutcome.match(outcome.getConditionMessage());
@@ -99,9 +100,9 @@ class OnWebApplicationCondition extends FilteringSpringBootCondition {
 
 	private ConditionOutcome isWebApplication(ConditionContext context, AnnotatedTypeMetadata metadata,
 			boolean required) {
-		switch (deduceType(metadata)) {
+		switch (deduceType(metadata)) {		// 获取注解指定的web类型
 		case SERVLET:
-			return isServletWebApplication(context);
+			return isServletWebApplication(context);		// 既然是Servlet应用，就一定包含 GenericWebApplicationContext
 		case REACTIVE:
 			return isReactiveWebApplication(context);
 		default:
@@ -126,18 +127,22 @@ class OnWebApplicationCondition extends FilteringSpringBootCondition {
 
 	private ConditionOutcome isServletWebApplication(ConditionContext context) {
 		ConditionMessage.Builder message = ConditionMessage.forCondition("");
+		// 常量定义类是否存在
 		if (!ClassNameFilter.isPresent(SERVLET_WEB_APPLICATION_CLASS, context.getClassLoader())) {
 			return ConditionOutcome.noMatch(message.didNotFind("servlet web application classes").atAll());
 		}
+		// 判断BeanFactory是否存在
 		if (context.getBeanFactory() != null) {
 			String[] scopes = context.getBeanFactory().getRegisteredScopeNames();
 			if (ObjectUtils.containsElement(scopes, "session")) {
 				return ConditionOutcome.match(message.foundExactly("'session' scope"));
 			}
 		}
+		// 判断Environment的类型是否为 ConfigurableWebEnvironment
 		if (context.getEnvironment() instanceof ConfigurableWebEnvironment) {
 			return ConditionOutcome.match(message.foundExactly("ConfigurableWebEnvironment"));
 		}
+		// 判断ResourceLoader是否为 WebApplicationContext
 		if (context.getResourceLoader() instanceof WebApplicationContext) {
 			return ConditionOutcome.match(message.foundExactly("WebApplicationContext"));
 		}
@@ -158,6 +163,7 @@ class OnWebApplicationCondition extends FilteringSpringBootCondition {
 		return ConditionOutcome.noMatch(message.because("not a reactive web application"));
 	}
 
+	// 从注解中取出配置值
 	private Type deduceType(AnnotatedTypeMetadata metadata) {
 		Map<String, Object> attributes = metadata.getAnnotationAttributes(ConditionalOnWebApplication.class.getName());
 		if (attributes != null) {

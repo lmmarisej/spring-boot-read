@@ -46,7 +46,8 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 	@Override
 	public boolean[] match(String[] autoConfigurationClasses, AutoConfigurationMetadata autoConfigurationMetadata) {
 		ConditionEvaluationReport report = ConditionEvaluationReport.find(this.beanFactory);
-		ConditionOutcome[] outcomes = getOutcomes(autoConfigurationClasses, autoConfigurationMetadata);
+		// 获取元数据文件中配置的key为自动加载注解类 + "." + "ConditionalOnClass" 的字符串
+		ConditionOutcome[] outcomes = getOutcomes(autoConfigurationClasses, autoConfigurationMetadata);	// 匹配结果和信息
 		boolean[] match = new boolean[outcomes.length];
 		for (int i = 0; i < outcomes.length; i++) {
 			match[i] = (outcomes[i] == null || outcomes[i].isMatch());
@@ -57,7 +58,7 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 				}
 			}
 		}
-		return match;
+		return match;		// 对匹配结果以布尔集合封装
 	}
 
 	protected abstract ConditionOutcome[] getOutcomes(String[] autoConfigurationClasses,
@@ -88,7 +89,7 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 		}
 		List<String> matches = new ArrayList<>(classNames.size());
 		for (String candidate : classNames) {
-			if (classNameFilter.matches(candidate, classLoader)) {
+			if (classNameFilter.matches(candidate, classLoader)) {		// 遍历所有过滤器，执行其matches方法
 				matches.add(candidate);
 			}
 		}
@@ -132,6 +133,7 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 
 		abstract boolean matches(String className, ClassLoader classLoader);
 
+		// 通过类加载是否抛出异常来判断类是否存在
 		static boolean isPresent(String className, ClassLoader classLoader) {
 			if (classLoader == null) {
 				classLoader = ClassUtils.getDefaultClassLoader();

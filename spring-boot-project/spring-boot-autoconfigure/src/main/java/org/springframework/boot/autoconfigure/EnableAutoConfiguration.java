@@ -74,24 +74,32 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * @see ConditionalOnClass
  * @see AutoConfigureAfter
  * @see SpringBootApplication
+ *
+ * 激活自动配置，在启动Spring应用上下文时进行自动配置，会尝试猜测并配置项目可能需要的Bean。
+ *
+ * 一般基于classpath中引入的类和已定义的bean来实现，例如，项目依赖的jar。
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
 @AutoConfigurationPackage
-@Import(AutoConfigurationImportSelector.class)
-public @interface EnableAutoConfiguration {
+@Import(AutoConfigurationImportSelector.class)	// EnableAutoConfiguration的关键功能的实现
+public @interface EnableAutoConfiguration {		// @EnableAutoConfiguration注解的类所在的package通常会被作为扫描注解@Entity的根路径。
 
 	/**
 	 * Environment property that can be used to override when auto-configuration is
 	 * enabled.
+	 *
+	 * 覆盖开启或关闭自动配置类功能。
 	 */
 	String ENABLED_OVERRIDE_PROPERTY = "spring.boot.enableautoconfiguration";
 
 	/**
 	 * Exclude specific auto-configuration classes such that they will never be applied.
 	 * @return the classes to exclude
+	 *
+	 * 根据类排除指定的自动配置类。
 	 */
 	Class<?>[] exclude() default {};
 
@@ -100,6 +108,8 @@ public @interface EnableAutoConfiguration {
 	 * applied.
 	 * @return the class names to exclude
 	 * @since 1.3.0
+	 *
+	 * 排除指定的自动配置类名。
 	 */
 	String[] excludeName() default {};
 
