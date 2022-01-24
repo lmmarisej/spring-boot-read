@@ -66,6 +66,8 @@ import org.springframework.util.StringUtils;
  * @author Andy Wilkinson
  * @since 1.0.0
  * @see SpringApplication
+ *
+ * 流式处理，功能与SpringApplication一样。
  */
 public class SpringApplicationBuilder {
 
