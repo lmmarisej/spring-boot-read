@@ -42,6 +42,8 @@ import org.springframework.util.ErrorHandler;
  * @author Andy Wilkinson
  * @author Artsiom Yudovin
  * @since 1.0.0
+ *
+ * 处理SpringBoot初始化过程中触发的事件。
  */
 public class EventPublishingRunListener implements SpringApplicationRunListener, Ordered {
 
@@ -51,10 +53,12 @@ public class EventPublishingRunListener implements SpringApplicationRunListener,
 
 	private final SimpleApplicationEventMulticaster initialMulticaster;
 
-	public EventPublishingRunListener(SpringApplication application, String[] args) {
+	public EventPublishingRunListener(SpringApplication application, String[] args) {		// 构造参数必须如此
 		this.application = application;
 		this.args = args;
+		// 广播器
 		this.initialMulticaster = new SimpleApplicationEventMulticaster();
+		// 遍历监听器，关联广播器，方便广播器将事件传给监听器
 		for (ApplicationListener<?> listener : application.getListeners()) {
 			this.initialMulticaster.addApplicationListener(listener);
 		}
@@ -67,6 +71,7 @@ public class EventPublishingRunListener implements SpringApplicationRunListener,
 
 	@Override
 	public void starting() {
+		// publishEvent VS multicastEvent
 		this.initialMulticaster.multicastEvent(new ApplicationStartingEvent(this.application, this.args));
 	}
 
@@ -84,13 +89,17 @@ public class EventPublishingRunListener implements SpringApplicationRunListener,
 
 	@Override
 	public void contextLoaded(ConfigurableApplicationContext context) {
+		// 遍历Application中所有监听器实现类
 		for (ApplicationListener<?> listener : this.application.getListeners()) {
 			if (listener instanceof ApplicationContextAware) {
-				((ApplicationContextAware) listener).setApplicationContext(context);
+				((ApplicationContextAware) listener).setApplicationContext(context);	// 设置上下文信息
 			}
+			// 将Application监听器全部加入上下文
 			context.addApplicationListener(listener);
 		}
+		// 处理之后，上下文才算初始化完成。
 		this.initialMulticaster.multicastEvent(new ApplicationPreparedEvent(this.application, this.args, context));
+		// 之后的事件便可以通过publishEvent来处理。
 	}
 
 	@Override

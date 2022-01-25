@@ -105,9 +105,9 @@ import org.springframework.util.StringUtils;
  */
 public class ConfigFileApplicationListener implements EnvironmentPostProcessor, SmartApplicationListener, Ordered {
 
-	private static final String DEFAULT_PROPERTIES = "defaultProperties";
+	private static final String DEFAULT_PROPERTIES = "defaultProperties";		// 表示profile是否为默认
 
-	// Note the order is from least to most specific (last one wins)
+	// Note the order is from least to most specific (last one wins)		默认加载路径
 	private static final String DEFAULT_SEARCH_LOCATIONS = "classpath:/,classpath:/config/,file:./,file:./config/";
 
 	private static final String DEFAULT_NAMES = "application";
@@ -161,7 +161,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 
 	private String searchLocations;
 
-	private String names;
+	private String names;		// profile文件名称
 
 	private int order = DEFAULT_ORDER;
 
@@ -171,6 +171,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 				|| ApplicationPreparedEvent.class.isAssignableFrom(eventType);
 	}
 
+	// 入口方法
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof ApplicationEnvironmentPreparedEvent) {
@@ -321,25 +322,27 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 		}
 
 		void load() {
+			// 过滤符合条件的properties文件
 			FilteredPropertySource.apply(this.environment, DEFAULT_PROPERTIES, LOAD_FILTERED_PROPERTY,
 					(defaultProperties) -> {
 						this.profiles = new LinkedList<>();
-						this.processedProfiles = new LinkedList<>();
+						this.processedProfiles = new LinkedList<>();		// 已处理
 						this.activatedProfiles = false;
 						this.loaded = new LinkedHashMap<>();
-						initializeProfiles();
-						while (!this.profiles.isEmpty()) {
+						initializeProfiles();		// 加载配置profile
+						while (!this.profiles.isEmpty()) {		// 遍历profiles，加载解析
 							Profile profile = this.profiles.poll();
 							if (isDefaultProfile(profile)) {
 								addProfileToEnvironment(profile.getName());
 							}
 							load(profile, this::getPositiveProfileFilter,
 									addToLoaded(MutablePropertySources::addLast, false));
-							this.processedProfiles.add(profile);
+							this.processedProfiles.add(profile);		// 已处理过
 						}
+						// 再次加载profile为null的配置，将其放置在loaded的最前面
 						load(null, this::getNegativeProfileFilter, addToLoaded(MutablePropertySources::addFirst, true));
-						addLoadedPropertySources();
-						applyActiveProfiles(defaultProperties);
+						addLoadedPropertySources();		// 条件加载的PropertySources到环境
+						applyActiveProfiles(defaultProperties);		// 过滤并添加defaultProperties到环境
 					});
 		}
 
@@ -394,12 +397,12 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 				}
 				return;
 			}
-			this.profiles.addAll(profiles);
+			this.profiles.addAll(profiles);		// 未经激活
 			if (this.logger.isDebugEnabled()) {
 				this.logger.debug("Activated activeProfiles " + StringUtils.collectionToCommaDelimitedString(profiles));
 			}
 			this.activatedProfiles = true;
-			removeUnprocessedDefaultProfiles();
+			removeUnprocessedDefaultProfiles();		// 移除未处理的默认profile
 		}
 
 		private void removeUnprocessedDefaultProfiles() {
@@ -622,6 +625,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 			this.environment.addActiveProfile(profile);
 		}
 
+		// 获得默认的扫描路径
 		private Set<String> getSearchLocations() {
 			Set<String> locations = getSearchLocations(CONFIG_ADDITIONAL_LOCATION_PROPERTY);
 			if (this.environment.containsProperty(CONFIG_LOCATION_PROPERTY)) {
@@ -683,6 +687,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 			}
 		}
 
+		// 将加载的配置文件有序地设置到环境中
 		private void addLoadedPropertySource(MutablePropertySources destination, String lastAdded,
 				PropertySource<?> source) {
 			if (lastAdded == null) {
@@ -725,6 +730,8 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 
 	/**
 	 * A Spring Profile that can be loaded.
+	 *
+	 * 存储profile相关信息。
 	 */
 	private static class Profile {
 

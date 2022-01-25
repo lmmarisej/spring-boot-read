@@ -130,6 +130,7 @@ class BeanDefinitionLoader {
 		return count;
 	}
 
+	// 可以看出，BeanDefinitionLoader 支持 Class、Resource、Package、CharSequence 四种范围加载。
 	private int load(Object source) {
 		Assert.notNull(source, "Source must not be null");
 		if (source instanceof Class<?>) {

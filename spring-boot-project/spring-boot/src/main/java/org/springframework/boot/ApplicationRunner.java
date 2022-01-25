@@ -28,6 +28,8 @@ import org.springframework.core.annotation.Order;
  * @author Phillip Webb
  * @since 1.3.0
  * @see CommandLineRunner
+ *
+ * 实现在启动时的一些操作。
  */
 @FunctionalInterface
 public interface ApplicationRunner {

@@ -32,12 +32,15 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * @author Dave Syer
  * @author Andy Wilkinson
  * @since 1.0.0
+ *
+ * SpringApplication的run方法监听器，提供了一系列方法用于用户回调。
+ *
+ * 自定义SpringApplicationRunListener：1、指定默认构造参数SpringApplication、String[]，2、需要配置在spring.factories中。
  */
 public interface SpringApplicationRunListener {
 
 	/**
-	 * Called immediately when the run method has first started. Can be used for very
-	 * early initialization.
+	 * Called immediately when the run method has first started. Can be used for very early initialization.
 	 */
 	default void starting() {
 	}
@@ -52,7 +55,7 @@ public interface SpringApplicationRunListener {
 
 	/**
 	 * Called once the {@link ApplicationContext} has been created and prepared, but
-	 * before sources have been loaded.
+	 * before sources have been loaded.    准备完成，ApplicationContext创建之前。
 	 * @param context the application context
 	 */
 	default void contextPrepared(ConfigurableApplicationContext context) {
@@ -62,6 +65,8 @@ public interface SpringApplicationRunListener {
 	 * Called once the application context has been loaded but before it has been
 	 * refreshed.
 	 * @param context the application context
+	 *
+	 *                加载完成，尚未刷新。刷新后，上下文创建完成。
 	 */
 	default void contextLoaded(ConfigurableApplicationContext context) {
 	}
@@ -72,6 +77,8 @@ public interface SpringApplicationRunListener {
 	 * ApplicationRunners} have not been called.
 	 * @param context the application context.
 	 * @since 2.0.0
+	 *
+	 * 刷新启动后，CommandLineRunner、ApplicationRunner之前。
 	 */
 	default void started(ConfigurableApplicationContext context) {
 	}
@@ -82,6 +89,8 @@ public interface SpringApplicationRunListener {
 	 * {@link ApplicationRunner ApplicationRunners} have been called.
 	 * @param context the application context.
 	 * @since 2.0.0
+	 *
+	 * 所有准备就绪，run方法之前。
 	 */
 	default void running(ConfigurableApplicationContext context) {
 	}
@@ -92,6 +101,8 @@ public interface SpringApplicationRunListener {
 	 * the context was created
 	 * @param exception the failure
 	 * @since 2.0.0
+	 *
+	 * 应用程序出现错误时。
 	 */
 	default void failed(ConfigurableApplicationContext context, Throwable exception) {
 	}

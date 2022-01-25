@@ -30,12 +30,16 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * @author Dave Syer
  * @author Phillip Webb
  * @since 1.0.0
+ *
+ * 在spring.factories中分别定义所支持文件类型及其加载方法。
  */
 public interface PropertySourceLoader {
 
 	/**
 	 * Returns the file extensions that the loader supports (excluding the '.').
 	 * @return the file extensions
+	 *
+	 * 支持的文件扩展名。
 	 */
 	String[] getFileExtensions();
 
@@ -48,6 +52,8 @@ public interface PropertySourceLoader {
 	 * @param resource the resource to load
 	 * @return a list property sources
 	 * @throws IOException if the source cannot be loaded
+	 *
+	 * 加载指定的配置文件，以mao形式返回。
 	 */
 	List<PropertySource<?>> load(String name, Resource resource) throws IOException;
 

@@ -31,6 +31,8 @@ import org.springframework.core.annotation.Order;
  * @author Dave Syer
  * @since 1.0.0
  * @see ApplicationRunner
+ *
+ * 实现在启动时的一些操作。
  */
 @FunctionalInterface
 public interface CommandLineRunner {
@@ -39,6 +41,8 @@ public interface CommandLineRunner {
 	 * Callback used to run the bean.
 	 * @param args incoming main method arguments
 	 * @throws Exception on error
+	 *
+	 * 与另一个runner的区别，参数为数组。
 	 */
 	void run(String... args) throws Exception;
 

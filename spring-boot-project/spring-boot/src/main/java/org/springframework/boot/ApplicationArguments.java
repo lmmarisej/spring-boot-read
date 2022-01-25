@@ -24,12 +24,16 @@ import java.util.Set;
  *
  * @author Phillip Webb
  * @since 1.3.0
+ *
+ * 用于提供访问运行SpringApplication时的参数解析和查询功能。
  */
 public interface ApplicationArguments {
 
 	/**
 	 * Return the raw unprocessed arguments that were passed to the application.
 	 * @return the arguments
+	 *
+	 * 原始未处理参数。
 	 */
 	String[] getSourceArgs();
 
@@ -37,6 +41,8 @@ public interface ApplicationArguments {
 	 * Return the names of all option arguments. For example, if the arguments were
 	 * "--foo=bar --debug" would return the values {@code ["foo", "debug"]}.
 	 * @return the option names or an empty set
+	 *
+	 * 参数名称集合。
 	 */
 	Set<String> getOptionNames();
 
@@ -45,6 +51,8 @@ public interface ApplicationArguments {
 	 * option with the given name.
 	 * @param name the name to check
 	 * @return {@code true} if the arguments contain an option with the given name
+	 *
+	 * 选项参数是否包含指定名称。
 	 */
 	boolean containsOption(String name);
 
@@ -62,12 +70,16 @@ public interface ApplicationArguments {
 	 * </ul>
 	 * @param name the name of the option
 	 * @return a list of option values for the given name
+	 *
+	 * 获取选项参数的值，选项参数以--开头。
 	 */
 	List<String> getOptionValues(String name);
 
 	/**
 	 * Return the collection of non-option arguments parsed.
 	 * @return the non-option arguments or an empty list
+	 *
+	 * 非选项参数列表。
 	 */
 	List<String> getNonOptionArgs();
 
