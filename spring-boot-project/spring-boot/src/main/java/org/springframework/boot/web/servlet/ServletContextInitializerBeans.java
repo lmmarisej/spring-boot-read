@@ -91,6 +91,7 @@ public class ServletContextInitializerBeans extends AbstractCollection<ServletCo
 		logMappings(this.initializers);
 	}
 
+	// 获取之前自动配置注册的ServletContextInitializer
 	private void addServletContextInitializerBeans(ListableBeanFactory beanFactory) {
 		for (Class<? extends ServletContextInitializer> initializerType : this.initializerTypes) {
 			for (Entry<String, ? extends ServletContextInitializer> initializerBean : getOrderedBeansOfType(beanFactory,

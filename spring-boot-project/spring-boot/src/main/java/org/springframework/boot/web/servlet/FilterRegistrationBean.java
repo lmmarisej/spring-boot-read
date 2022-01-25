@@ -39,6 +39,8 @@ import org.springframework.util.Assert;
  * @see ServletContextInitializer
  * @see ServletContext#addFilter(String, Filter)
  * @see DelegatingFilterProxyRegistrationBean
+ *
+ * 本质是一个ServletContextInitializer。
  */
 public class FilterRegistrationBean<T extends Filter> extends AbstractFilterRegistrationBean<T> {
 

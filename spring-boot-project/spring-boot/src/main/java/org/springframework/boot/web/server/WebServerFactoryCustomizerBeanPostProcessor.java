@@ -31,8 +31,9 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.util.Assert;
 
 /**
- * {@link BeanPostProcessor} that applies all {@link WebServerFactoryCustomizer} beans
- * from the bean factory to {@link WebServerFactory} beans.
+ * {@link BeanPostProcessor} that applies all {@link WebServerFactoryCustomizer} beans from the bean factory to {@link WebServerFactory} beans.
+ *
+ * 在WebServerFactory初始化时获取自动配置类注入的WebServerFactoryCustomizer，分别调用WebServerFactoryCustomizer的方法对WebServerFactory进行定制化处理。
  *
  * @author Dave Syer
  * @author Phillip Webb

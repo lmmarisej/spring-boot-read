@@ -30,7 +30,7 @@ public enum SearchStrategy {
 	CURRENT,
 
 	/**
-	 * Search all ancestors, but not the current context.
+	 * Search all ancestors, but not the current context. 不包括当前容器。
 	 */
 	ANCESTORS,
 

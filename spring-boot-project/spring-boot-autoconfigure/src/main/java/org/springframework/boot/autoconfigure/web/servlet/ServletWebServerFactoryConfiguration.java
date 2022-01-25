@@ -52,6 +52,8 @@ import org.springframework.context.annotation.Configuration;
  * Those should be {@code @Import} in a regular auto-configuration class to guarantee
  * their order of execution.
  *
+ * 配置Servlet Web服务器基本信息。
+ *
  * @author Phillip Webb
  * @author Dave Syer
  * @author Ivan Sopov
@@ -63,6 +65,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 class ServletWebServerFactoryConfiguration {
 
+	// 自动配置Tomcat
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass({ Servlet.class, Tomcat.class, UpgradeProtocol.class })
 	@ConditionalOnMissingBean(value = ServletWebServerFactory.class, search = SearchStrategy.CURRENT)
@@ -70,6 +73,7 @@ class ServletWebServerFactoryConfiguration {
 
 		@Bean
 		TomcatServletWebServerFactory tomcatServletWebServerFactory(
+				// ObjectProvider避免了强依赖导致的依赖对象不存在
 				ObjectProvider<TomcatConnectorCustomizer> connectorCustomizers,
 				ObjectProvider<TomcatContextCustomizer> contextCustomizers,
 				ObjectProvider<TomcatProtocolHandlerCustomizer<?>> protocolHandlerCustomizers) {

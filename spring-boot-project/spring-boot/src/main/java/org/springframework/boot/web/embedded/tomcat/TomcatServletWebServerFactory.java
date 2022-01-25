@@ -179,10 +179,10 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 		Tomcat tomcat = new Tomcat();
 		File baseDir = (this.baseDirectory != null) ? this.baseDirectory : createTempDir("tomcat");
 		tomcat.setBaseDir(baseDir.getAbsolutePath());
-		Connector connector = new Connector(this.protocol);
+		Connector connector = new Connector(this.protocol);		// Connector
 		connector.setThrowOnFailure(true);
 		tomcat.getService().addConnector(connector);
-		customizeConnector(connector);
+		customizeConnector(connector);			// 定制化Connector
 		tomcat.setConnector(connector);
 		tomcat.getHost().setAutoDeploy(false);
 		configureEngine(tomcat.getEngine());
@@ -190,7 +190,7 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 			tomcat.getService().addConnector(additionalConnector);
 		}
 		prepareContext(tomcat.getHost(), initializers);
-		return getTomcatWebServer(tomcat);
+		return getTomcatWebServer(tomcat);		// 创建和初始化
 	}
 
 	private void configureEngine(Engine engine) {
