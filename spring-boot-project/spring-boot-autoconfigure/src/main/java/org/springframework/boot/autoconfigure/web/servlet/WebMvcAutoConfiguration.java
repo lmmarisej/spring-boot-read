@@ -127,6 +127,8 @@ import org.springframework.web.util.UrlPathHelper;
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for {@link EnableWebMvc Web MVC}.
  *
+ * 对Spring MVC进行自动配置。
+ *
  * @author Phillip Webb
  * @author Dave Syer
  * @author Andy Wilkinson
@@ -245,12 +247,13 @@ public class WebMvcAutoConfiguration {
 			return resolver;
 		}
 
+		// 通过逻辑视图名，匹配定义好的视图bean对象
 		@Bean
 		@ConditionalOnBean(View.class)
 		@ConditionalOnMissingBean
 		public BeanNameViewResolver beanNameViewResolver() {
 			BeanNameViewResolver resolver = new BeanNameViewResolver();
-			resolver.setOrder(Ordered.LOWEST_PRECEDENCE - 10);
+			resolver.setOrder(Ordered.LOWEST_PRECEDENCE - 10);		// 支持对BeanNameViewResolver的排序
 			return resolver;
 		}
 
@@ -403,22 +406,24 @@ public class WebMvcAutoConfiguration {
 		@Override
 		protected void addResourceHandlers(ResourceHandlerRegistry registry) {
 			super.addResourceHandlers(registry);
-			if (!this.resourceProperties.isAddMappings()) {
+			if (!this.resourceProperties.isAddMappings()) {		// 默认资源处理器不可用
 				logger.debug("Default resource handling disabled");
 				return;
 			}
+			// 针对webjars特殊处理
 			addResourceHandler(registry, "/webjars/**", "classpath:/META-INF/resources/webjars/");
-			addResourceHandler(registry, this.mvcProperties.getStaticPathPattern(),
+			addResourceHandler(registry, this.mvcProperties.getStaticPathPattern(),		// /**
 					this.resourceProperties.getStaticLocations());
 
 		}
 
 		private void addResourceHandler(ResourceHandlerRegistry registry, String pattern, String... locations) {
-			if (registry.hasMappingForPattern(pattern)) {
+			if (registry.hasMappingForPattern(pattern)) {		// 开发者用户有设置匹配/**
 				return;
 			}
-			ResourceHandlerRegistration registration = registry.addResourceHandler(pattern);
-			registration.addResourceLocations(locations);
+			// 没有针对/**处理，则提供默认的静态资源映射处理
+			ResourceHandlerRegistration registration = registry.addResourceHandler(pattern);		// /**
+			registration.addResourceLocations(locations);		// 静态资源位置
 			registration.setCachePeriod(getSeconds(this.resourceProperties.getCache().getPeriod()));
 			registration.setCacheControl(this.resourceProperties.getCache().getCachecontrol().toHttpCacheControl());
 			customizeResourceHandlerRegistration(registration);
@@ -435,18 +440,21 @@ public class WebMvcAutoConfiguration {
 			}
 		}
 
+		// 主要用来查找默认路径下的index.html
 		@Bean
 		public WelcomePageHandlerMapping welcomePageHandlerMapping(ApplicationContext applicationContext,
 				FormattingConversionService mvcConversionService, ResourceUrlProvider mvcResourceUrlProvider) {
 			WelcomePageHandlerMapping welcomePageHandlerMapping = new WelcomePageHandlerMapping(
 					new TemplateAvailabilityProviders(applicationContext), applicationContext, getWelcomePage(),
 					this.mvcProperties.getStaticPathPattern());
+			// 设置拦截器
 			welcomePageHandlerMapping.setInterceptors(getInterceptors(mvcConversionService, mvcResourceUrlProvider));
 			welcomePageHandlerMapping.setCorsConfigurations(getCorsConfigurations());
 			return welcomePageHandlerMapping;
 		}
 
 		private Resource getWelcomePage() {
+			// 遍历各个文件路径找
 			for (String location : this.resourceProperties.getStaticLocations()) {
 				Resource indexHtml = getIndexHtml(location);
 				if (indexHtml != null) {

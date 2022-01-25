@@ -72,6 +72,8 @@ public interface DispatcherServletPath {
 	 * Return a URL mapping pattern that can be used with a
 	 * {@link ServletRegistrationBean} to map the dispatcher servlet.
 	 * @return the path as a servlet URL mapping
+	 *
+	 * 获取url的匹配规则。
 	 */
 	default String getServletUrlMapping() {
 		if (getPath().equals("") || getPath().equals("/")) {
@@ -80,7 +82,7 @@ public interface DispatcherServletPath {
 		if (getPath().contains("*")) {
 			return getPath();
 		}
-		if (getPath().endsWith("/")) {
+		if (getPath().endsWith("/")) {		// 将xxx/转为xxx/*
 			return getPath() + "*";
 		}
 		return getPath() + "/*";

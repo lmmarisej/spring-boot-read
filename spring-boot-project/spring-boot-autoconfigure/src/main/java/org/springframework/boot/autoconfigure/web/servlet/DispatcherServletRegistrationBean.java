@@ -28,6 +28,10 @@ import org.springframework.web.servlet.DispatcherServlet;
  *
  * @author Phillip Webb
  * @since 2.0.4
+ *
+ * 注册DispatcherServlet，公开DispatcherServletPath。
+ *
+ * DispatcherServlet：前端控制器设计模式。
  */
 public class DispatcherServletRegistrationBean extends ServletRegistrationBean<DispatcherServlet>
 		implements DispatcherServletPath {
@@ -39,6 +43,8 @@ public class DispatcherServletRegistrationBean extends ServletRegistrationBean<D
 	 * servlet and path.
 	 * @param servlet the dispatcher servlet
 	 * @param path the dispatcher servlet path
+	 *
+	 *             根据指定参数创建。
 	 */
 	public DispatcherServletRegistrationBean(DispatcherServlet servlet, String path) {
 		super(servlet);
@@ -52,6 +58,7 @@ public class DispatcherServletRegistrationBean extends ServletRegistrationBean<D
 		return this.path;
 	}
 
+	// 禁用该操作。
 	@Override
 	public void setUrlMappings(Collection<String> urlMappings) {
 		throw new UnsupportedOperationException("URL Mapping cannot be changed on a DispatcherServlet registration");
