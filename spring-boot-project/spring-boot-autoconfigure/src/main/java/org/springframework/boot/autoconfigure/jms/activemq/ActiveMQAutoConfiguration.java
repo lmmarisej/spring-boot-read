@@ -42,7 +42,7 @@ import org.springframework.context.annotation.Import;
  * @since 1.1.0
  */
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureBefore(JmsAutoConfiguration.class)
+@AutoConfigureBefore(JmsAutoConfiguration.class)		// jms需要用到connectionFactory
 @AutoConfigureAfter({ JndiConnectionFactoryAutoConfiguration.class })
 @ConditionalOnClass({ ConnectionFactory.class, ActiveMQConnectionFactory.class })
 @ConditionalOnMissingBean(ConnectionFactory.class)

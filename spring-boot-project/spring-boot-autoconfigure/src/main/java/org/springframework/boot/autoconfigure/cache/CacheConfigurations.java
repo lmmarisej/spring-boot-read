@@ -34,13 +34,14 @@ final class CacheConfigurations {
 
 	static {
 		Map<CacheType, Class<?>> mappings = new EnumMap<>(CacheType.class);
+		// 定义每种缓存对应的@Configuration
 		mappings.put(CacheType.GENERIC, GenericCacheConfiguration.class);
 		mappings.put(CacheType.EHCACHE, EhCacheCacheConfiguration.class);
 		mappings.put(CacheType.HAZELCAST, HazelcastCacheConfiguration.class);
 		mappings.put(CacheType.INFINISPAN, InfinispanCacheConfiguration.class);
 		mappings.put(CacheType.JCACHE, JCacheCacheConfiguration.class);
 		mappings.put(CacheType.COUCHBASE, CouchbaseCacheConfiguration.class);
-		mappings.put(CacheType.REDIS, RedisCacheConfiguration.class);
+		mappings.put(CacheType.REDIS, RedisCacheConfiguration.class);		// redis配置，我们以此为例，跟进
 		mappings.put(CacheType.CAFFEINE, CaffeineCacheConfiguration.class);
 		mappings.put(CacheType.SIMPLE, SimpleCacheConfiguration.class);
 		mappings.put(CacheType.NONE, NoOpCacheConfiguration.class);
@@ -50,6 +51,7 @@ final class CacheConfigurations {
 	private CacheConfigurations() {
 	}
 
+	// 根据对象实例进行获取
 	static String getConfigurationClass(CacheType cacheType) {
 		Class<?> configurationClass = MAPPINGS.get(cacheType);
 		Assert.state(configurationClass != null, () -> "Unknown cache type " + cacheType);

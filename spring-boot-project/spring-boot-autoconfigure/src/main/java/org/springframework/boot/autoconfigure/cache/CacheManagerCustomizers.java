@@ -27,6 +27,8 @@ import org.springframework.cache.CacheManager;
  * Invokes the available {@link CacheManagerCustomizer} instances in the context for a
  * given {@link CacheManager}.
  *
+ * 多个缓存定制化封装。
+ *
  * @author Stephane Nicoll
  * @since 1.5.0
  */
@@ -45,6 +47,8 @@ public class CacheManagerCustomizers {
 	 * @param <T> the type of cache manager
 	 * @param cacheManager the cache manager to customize
 	 * @return the cache manager
+	 *
+	 * 缓存定制化操作。
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends CacheManager> T customize(T cacheManager) {

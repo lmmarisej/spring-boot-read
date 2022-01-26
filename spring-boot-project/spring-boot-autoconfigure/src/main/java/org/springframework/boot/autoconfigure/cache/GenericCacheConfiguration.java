@@ -35,14 +35,15 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnBean(Cache.class)
-@ConditionalOnMissingBean(CacheManager.class)
+@ConditionalOnMissingBean(CacheManager.class)		// 没有就自己搞
 @Conditional(CacheCondition.class)
 class GenericCacheConfiguration {
 
+	// 构建一个CacheManager
 	@Bean
 	SimpleCacheManager cacheManager(CacheManagerCustomizers customizers, Collection<Cache> caches) {
 		SimpleCacheManager cacheManager = new SimpleCacheManager();
-		cacheManager.setCaches(caches);
+		cacheManager.setCaches(caches);			// 缓存集合
 		return customizers.customize(cacheManager);
 	}
 

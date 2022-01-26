@@ -49,9 +49,9 @@ import org.springframework.jms.support.destination.DestinationResolver;
  * @since 1.0.0
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass({ Message.class, JmsTemplate.class })
+@ConditionalOnClass({ Message.class, JmsTemplate.class })		// 启用条件
 @ConditionalOnBean(ConnectionFactory.class)
-@EnableConfigurationProperties(JmsProperties.class)
+@EnableConfigurationProperties(JmsProperties.class)		// 配置属性
 @Import(JmsAnnotationDrivenConfiguration.class)
 public class JmsAutoConfiguration {
 
@@ -78,13 +78,14 @@ public class JmsAutoConfiguration {
 		public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
 			PropertyMapper map = PropertyMapper.get();
 			JmsTemplate template = new JmsTemplate(connectionFactory);
-			template.setPubSubDomain(this.properties.isPubSubDomain());
+			template.setPubSubDomain(this.properties.isPubSubDomain());		// 是否发布订阅模式，默认false——p2p
 			map.from(this.destinationResolver::getIfUnique).whenNonNull().to(template::setDestinationResolver);
 			map.from(this.messageConverter::getIfUnique).whenNonNull().to(template::setMessageConverter);
 			mapTemplateProperties(this.properties.getTemplate(), template);
 			return template;
 		}
 
+		// 其它配置
 		private void mapTemplateProperties(Template properties, JmsTemplate template) {
 			PropertyMapper map = PropertyMapper.get();
 			map.from(properties::getDefaultDestination).whenNonNull().to(template::setDefaultDestinationName);
@@ -110,6 +111,7 @@ public class JmsAutoConfiguration {
 		@ConditionalOnSingleCandidate(JmsTemplate.class)
 		public JmsMessagingTemplate jmsMessagingTemplate(JmsProperties properties, JmsTemplate jmsTemplate) {
 			JmsMessagingTemplate messagingTemplate = new JmsMessagingTemplate(jmsTemplate);
+			// 目标名称
 			mapTemplateProperties(properties.getTemplate(), messagingTemplate);
 			return messagingTemplate;
 		}

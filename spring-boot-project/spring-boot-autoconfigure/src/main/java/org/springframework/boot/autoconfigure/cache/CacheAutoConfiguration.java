@@ -54,18 +54,22 @@ import org.springframework.util.Assert;
  *
  * @author Stephane Nicoll
  * @since 1.3.0
- * @see EnableCaching
+ * @see EnableCaching		启动SpringBoot的缓存机制
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(CacheManager.class)
 @ConditionalOnBean(CacheAspectSupport.class)
-@ConditionalOnMissingBean(value = CacheManager.class, name = "cacheResolver")
+@ConditionalOnMissingBean(value = CacheManager.class, name = "cacheResolver")		// 项目引入了缓存 CacheManager
 @EnableConfigurationProperties(CacheProperties.class)
+// 先集成对应的缓存框架或组件
 @AutoConfigureAfter({ CouchbaseAutoConfiguration.class, HazelcastAutoConfiguration.class,
 		HibernateJpaAutoConfiguration.class, RedisAutoConfiguration.class })
-@Import({ CacheConfigurationImportSelector.class, CacheManagerEntityManagerFactoryDependsOnPostProcessor.class })
+// 导入SpringBoot目前支持的缓存类型
+@Import({ CacheConfigurationImportSelector.class,
+		CacheManagerEntityManagerFactoryDependsOnPostProcessor.class })
 public class CacheAutoConfiguration {
 
+	// 将容器中多个CacheManagerCustomizer，包装为CacheManagerCustomizers
 	@Bean
 	@ConditionalOnMissingBean
 	public CacheManagerCustomizers cacheManagerCustomizers(ObjectProvider<CacheManagerCustomizer<?>> customizers) {
@@ -84,7 +88,7 @@ public class CacheAutoConfiguration {
 			extends EntityManagerFactoryDependsOnPostProcessor {
 
 		CacheManagerEntityManagerFactoryDependsOnPostProcessor() {
-			super("cacheManager");
+			super("cacheManager");		// 声明所有类型为EntityManagerFactory的bean都必须依赖名称为cacheManager的bean
 		}
 
 	}
@@ -92,6 +96,8 @@ public class CacheAutoConfiguration {
 	/**
 	 * Bean used to validate that a CacheManager exists and provide a more meaningful
 	 * exception.
+	 *
+	 * 检查并抛出有意义的异常。
 	 */
 	static class CacheManagerValidator implements InitializingBean {
 
@@ -106,7 +112,7 @@ public class CacheAutoConfiguration {
 
 		@Override
 		public void afterPropertiesSet() {
-			Assert.notNull(this.cacheManager.getIfAvailable(),
+			Assert.notNull(this.cacheManager.getIfAvailable(),		// 确保容器中存在一个CacheManager
 					() -> "No cache manager could be auto-configured, check your configuration (caching " + "type is '"
 							+ this.cacheProperties.getType() + "')");
 		}
@@ -115,6 +121,8 @@ public class CacheAutoConfiguration {
 
 	/**
 	 * {@link ImportSelector} to add {@link CacheType} configuration classes.
+	 *
+	 * 各类基础缓存框架的配置。
 	 */
 	static class CacheConfigurationImportSelector implements ImportSelector {
 
@@ -123,6 +131,7 @@ public class CacheAutoConfiguration {
 			CacheType[] types = CacheType.values();
 			String[] imports = new String[types.length];
 			for (int i = 0; i < types.length; i++) {
+				// 获取支持的每种缓存对应的自动配置类
 				imports[i] = CacheConfigurations.getConfigurationClass(types[i]);
 			}
 			return imports;

@@ -78,6 +78,8 @@ public class JndiConnectionFactoryAutoConfiguration {
 
 	/**
 	 * Condition for JNDI name or a specific property.
+	 *
+	 * 指定jndi生效或配置有指定jndi-name
 	 */
 	static class JndiOrPropertyCondition extends AnyNestedCondition {
 

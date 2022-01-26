@@ -49,7 +49,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 @ConditionalOnBean(RedisConnectionFactory.class)
 @ConditionalOnMissingBean(CacheManager.class)
-@Conditional(CacheCondition.class)
+@Conditional(CacheCondition.class)		// 注意
 class RedisCacheConfiguration {
 
 	@Bean

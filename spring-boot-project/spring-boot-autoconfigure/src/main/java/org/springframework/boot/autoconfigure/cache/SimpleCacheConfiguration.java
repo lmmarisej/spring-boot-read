@@ -28,6 +28,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Simplest cache configuration, usually used as a fallback.
  *
+ * 启用了@EnableCaching，但开发者用户未配置其它缓存类库时生效。
+ *
  * @author Stephane Nicoll
  */
 @Configuration(proxyBeanMethods = false)
@@ -39,11 +41,11 @@ class SimpleCacheConfiguration {
 	ConcurrentMapCacheManager cacheManager(CacheProperties cacheProperties,
 			CacheManagerCustomizers cacheManagerCustomizers) {
 		ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager();
-		List<String> cacheNames = cacheProperties.getCacheNames();
+		List<String> cacheNames = cacheProperties.getCacheNames();		// 缓存名称列表
 		if (!cacheNames.isEmpty()) {
 			cacheManager.setCacheNames(cacheNames);
 		}
-		return cacheManagerCustomizers.customize(cacheManager);
+		return cacheManagerCustomizers.customize(cacheManager);		// 对缓存进行定制化处理
 	}
 
 }

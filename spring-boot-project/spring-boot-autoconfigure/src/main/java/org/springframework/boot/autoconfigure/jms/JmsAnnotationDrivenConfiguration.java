@@ -40,13 +40,16 @@ import org.springframework.transaction.jta.JtaTransactionManager;
  * @author Stephane Nicoll
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass(EnableJms.class)
+@ConditionalOnClass(EnableJms.class)		// EnableJms用于开启JMS注解
 class JmsAnnotationDrivenConfiguration {
 
+	// DestinationResolver用于解决JMS目标的策略接口；JmsTemplate将该字符串解析为Destination实例
 	private final ObjectProvider<DestinationResolver> destinationResolver;
 
+	// jta事务管理，也可用于分布式事务
 	private final ObjectProvider<JtaTransactionManager> transactionManager;
 
+	// 策略接口，用于指定Java对象和JMS消息之间的转换器
 	private final ObjectProvider<MessageConverter> messageConverter;
 
 	private final JmsProperties properties;
@@ -60,6 +63,7 @@ class JmsAnnotationDrivenConfiguration {
 		this.properties = properties;
 	}
 
+	// 配置
 	@Bean
 	@ConditionalOnMissingBean
 	DefaultJmsListenerContainerFactoryConfigurer jmsListenerContainerFactoryConfigurer() {
@@ -71,6 +75,7 @@ class JmsAnnotationDrivenConfiguration {
 		return configurer;
 	}
 
+	// 构建工厂
 	@Bean
 	@ConditionalOnSingleCandidate(ConnectionFactory.class)
 	@ConditionalOnMissingBean(name = "jmsListenerContainerFactory")
