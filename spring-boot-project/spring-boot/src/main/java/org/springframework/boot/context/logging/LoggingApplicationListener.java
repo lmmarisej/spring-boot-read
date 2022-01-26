@@ -216,24 +216,30 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
+		// 启动事件
 		if (event instanceof ApplicationStartingEvent) {
 			onApplicationStartingEvent((ApplicationStartingEvent) event);
 		}
+		// 环境准备初级阶段
 		else if (event instanceof ApplicationEnvironmentPreparedEvent) {
 			onApplicationEnvironmentPreparedEvent((ApplicationEnvironmentPreparedEvent) event);
 		}
+		// 准备之后，刷新之前
 		else if (event instanceof ApplicationPreparedEvent) {
 			onApplicationPreparedEvent((ApplicationPreparedEvent) event);
 		}
+		// 容器关闭
 		else if (event instanceof ContextClosedEvent
 				&& ((ContextClosedEvent) event).getApplicationContext().getParent() == null) {
 			onContextClosedEvent();
 		}
+		// 启动失败
 		else if (event instanceof ApplicationFailedEvent) {
 			onApplicationFailedEvent();
 		}
 	}
 
+	// 第一次，会创建、初始化LoggingSystem
 	private void onApplicationStartingEvent(ApplicationStartingEvent event) {
 		this.loggingSystem = LoggingSystem.get(event.getSpringApplication().getClassLoader());
 		this.loggingSystem.beforeInitialize();
@@ -274,8 +280,8 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 	/**
 	 * Initialize the logging system according to preferences expressed through the
 	 * {@link Environment} and the classpath.
-	 * @param environment the environment
-	 * @param classLoader the classloader
+	 *
+	 * 用户指定了配置文件，根据指定的配置加载属性中进行初始化操作；没有则使用默认初始化。
 	 */
 	protected void initialize(ConfigurableEnvironment environment, ClassLoader classLoader) {
 		new LoggingSystemProperties(environment).apply();

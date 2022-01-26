@@ -324,7 +324,7 @@ public class SpringApplication {
 		}
 
 		try {
-			listeners.running(context);
+			listeners.running(context);		// 通知监听器，容器正在运行
 		} catch (Throwable ex) {
 			handleRunFailure(context, ex, exceptionReporters, null);
 			throw new IllegalStateException(ex);

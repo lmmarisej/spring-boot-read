@@ -102,10 +102,11 @@ public class LogbackLoggingSystem extends Slf4JLoggingSystem {
 	@Override
 	public void beforeInitialize() {
 		LoggerContext loggerContext = getLoggerContext();
-		if (isAlreadyInitialized(loggerContext)) {
+		if (isAlreadyInitialized(loggerContext)) {		// 已配置logger
 			return;
 		}
 		super.beforeInitialize();
+		// 初始化之前的日志全部拒绝
 		loggerContext.getTurboFilterList().add(FILTER);
 	}
 

@@ -31,6 +31,8 @@ import org.springframework.util.ClassUtils;
  *
  * @author Andy Wilkinson
  * @since 1.2.0
+ *
+ * 处理内置日志与slf4j的handler桥接转换。
  */
 public abstract class Slf4JLoggingSystem extends AbstractLoggingSystem {
 
@@ -64,9 +66,9 @@ public abstract class Slf4JLoggingSystem extends AbstractLoggingSystem {
 
 	private void configureJdkLoggingBridgeHandler() {
 		try {
-			if (isBridgeJulIntoSlf4j()) {
-				removeJdkLoggingBridgeHandler();
-				SLF4JBridgeHandler.install();
+			if (isBridgeJulIntoSlf4j()) {		// 桥接JUL为SLF4j
+				removeJdkLoggingBridgeHandler();	// 删除jdk内置的handler
+				SLF4JBridgeHandler.install();	// 添加SLF4j的handler
 			}
 		}
 		catch (Throwable ex) {

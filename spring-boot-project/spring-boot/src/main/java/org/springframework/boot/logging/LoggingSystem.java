@@ -60,7 +60,8 @@ public abstract class LoggingSystem {
 
 	static {
 		Map<String, String> systems = new LinkedHashMap<>();
-		systems.put("ch.qos.logback.core.Appender", "org.springframework.boot.logging.logback.LogbackLoggingSystem");
+		// key为日志系统核心类，value为LoggingSystem的实现
+		systems.put("ch.qos.logback.core.Appender", "org.springframework.boot.logging.logback.LogbackLoggingSystem");		// 第一个，优先使用
 		systems.put("org.apache.logging.log4j.core.impl.Log4jContextFactory",
 				"org.springframework.boot.logging.log4j2.Log4J2LoggingSystem");
 		systems.put("java.util.logging.LogManager", "org.springframework.boot.logging.java.JavaLoggingSystem");
@@ -153,6 +154,7 @@ public abstract class LoggingSystem {
 			if (NONE.equals(loggingSystem)) {
 				return new NoOpLoggingSystem();
 			}
+			// 通过反射实例化
 			return get(classLoader, loggingSystem);
 		}
 		return SYSTEMS.entrySet().stream().filter((entry) -> ClassUtils.isPresent(entry.getKey(), classLoader))

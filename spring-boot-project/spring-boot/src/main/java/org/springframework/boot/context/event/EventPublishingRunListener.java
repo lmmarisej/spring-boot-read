@@ -44,6 +44,8 @@ import org.springframework.util.ErrorHandler;
  * @since 1.0.0
  *
  * 处理SpringBoot初始化过程中触发的事件。
+ *
+ * 被封装到SpringApplicationRunListeners，在启动阶段触发。
  */
 public class EventPublishingRunListener implements SpringApplicationRunListener, Ordered {
 
@@ -71,7 +73,7 @@ public class EventPublishingRunListener implements SpringApplicationRunListener,
 
 	@Override
 	public void starting() {
-		// publishEvent VS multicastEvent
+		// publishEvent VS multicastEvent        广播，对应的日志处理等监听器执行
 		this.initialMulticaster.multicastEvent(new ApplicationStartingEvent(this.application, this.args));
 	}
 
