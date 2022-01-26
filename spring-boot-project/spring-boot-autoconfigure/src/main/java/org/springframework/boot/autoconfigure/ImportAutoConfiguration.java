@@ -47,12 +47,14 @@ import org.springframework.core.annotation.AliasFor;
 @Documented
 @Inherited
 @Import(ImportAutoConfigurationImportSelector.class)
-public @interface ImportAutoConfiguration {
+public @interface ImportAutoConfiguration {		// 即指定排除类、又指定导入类
 
 	/**
 	 * The auto-configuration classes that should be imported. This is an alias for
 	 * {@link #classes()}.
 	 * @return the classes to import
+	 *
+	 * 指定引入的自动配置类。
 	 */
 	@AliasFor("classes")
 	Class<?>[] value() default {};
@@ -62,6 +64,8 @@ public @interface ImportAutoConfiguration {
 	 * specified using an entry in {@code META-INF/spring.factories} where the key is the
 	 * fully-qualified name of the annotated class.
 	 * @return the classes to import
+	 *
+	 * 指定引入的自动配置类，为空从spring-boot-test-autoconfigure/META-INF/spring.factories中取出。
 	 */
 	@AliasFor("value")
 	Class<?>[] classes() default {};

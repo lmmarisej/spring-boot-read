@@ -27,6 +27,8 @@ import org.springframework.web.servlet.DispatcherServlet;
  * @author Madhura Bhave
  * @author Stephane Nicoll
  * @since 2.0.4
+ *
+ * 接口，用于提供DispatcherServletPath所需路径的详细信息。
  */
 @FunctionalInterface
 public interface DispatcherServletPath {

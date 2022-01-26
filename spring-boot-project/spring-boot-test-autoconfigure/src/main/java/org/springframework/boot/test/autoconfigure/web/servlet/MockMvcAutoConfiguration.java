@@ -48,7 +48,7 @@ import org.springframework.web.servlet.DispatcherServlet;
  * @since 1.4.0
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnWebApplication(type = Type.SERVLET)		// 需要servlet环境
 @AutoConfigureAfter(WebMvcAutoConfiguration.class)
 @EnableConfigurationProperties({ ServerProperties.class, WebMvcProperties.class })
 public class MockMvcAutoConfiguration {
@@ -62,12 +62,14 @@ public class MockMvcAutoConfiguration {
 		this.webMvcProperties = webMvcProperties;
 	}
 
+	// 自己弄一个DispatcherServletPath
 	@Bean
 	@ConditionalOnMissingBean
 	public DispatcherServletPath dispatcherServletPath() {
 		return () -> this.webMvcProperties.getServlet().getPath();
 	}
 
+	// 创建MockMvc
 	@Bean
 	@ConditionalOnMissingBean(MockMvcBuilder.class)
 	public DefaultMockMvcBuilder mockMvcBuilder(List<MockMvcBuilderCustomizer> customizers) {

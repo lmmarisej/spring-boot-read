@@ -72,13 +72,15 @@ import org.springframework.web.context.WebApplicationContext;
  * @author Andy Wilkinson
  * @since 1.4.0
  * @see ContextConfiguration
+ *
+ * 为SpringApplication创建上下问题，并支持SpringBoot特性。
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
 @BootstrapWith(SpringBootTestContextBootstrapper.class)
-@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension.class)		// 2.1，x之后提供支持，低版本需要结合RunWith（SpringRunner）注解使用，否则注解会被忽略。
 public @interface SpringBootTest {
 
 	/**
@@ -135,6 +137,8 @@ public @interface SpringBootTest {
 		 * servlet APIs are on the classpath, a {@link ReactiveWebApplicationContext} if
 		 * Spring WebFlux is on the classpath or a regular {@link ApplicationContext}
 		 * otherwise.
+		 *
+		 * 加载WebApplicationContext，提供mock servlet环境，但真正的servlet环境不会启动。
 		 */
 		MOCK(false),
 
@@ -143,12 +147,16 @@ public @interface SpringBootTest {
 		 * {@code server.port=0} {@link Environment} property (which usually triggers
 		 * listening on a random port). Often used in conjunction with a
 		 * {@link LocalServerPort @LocalServerPort} injected field on the test.
+		 *
+		 * 加载EmbeddedWebApplicationContext并提供真实的servlet环境，端口随机。
 		 */
 		RANDOM_PORT(true),
 
 		/**
 		 * Creates a (reactive) web application context without defining any
 		 * {@code server.port=0} {@link Environment} property.
+		 *
+		 * 加载EmbeddedWebApplicationContext并提供真实的servlet环境，端口默认。
 		 */
 		DEFINED_PORT(true),
 
@@ -156,6 +164,8 @@ public @interface SpringBootTest {
 		 * Creates an {@link ApplicationContext} and sets
 		 * {@link SpringApplication#setWebApplicationType(WebApplicationType)} to
 		 * {@link WebApplicationType#NONE}.
+		 *
+		 * 使用SpringApplication加载一个ApplicationContext，没有servlet环境
 		 */
 		NONE(false);
 

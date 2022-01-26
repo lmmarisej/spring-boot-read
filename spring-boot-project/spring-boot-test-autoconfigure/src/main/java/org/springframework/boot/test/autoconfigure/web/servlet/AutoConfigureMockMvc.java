@@ -53,12 +53,16 @@ public @interface AutoConfigureMockMvc {
 	 * If filters from the application context should be registered with MockMVC. Defaults
 	 * to {@code true}.
 	 * @return if filters should be added
+	 *
+	 * 先MockMVC注册来自应用上下文的filter。
 	 */
 	boolean addFilters() default true;
 
 	/**
 	 * How {@link MvcResult} information should be printed after each MockMVC invocation.
 	 * @return how information is printed
+	 *
+	 * 每次调用测试如何打印？
 	 */
 	@PropertyMapping(skip = SkipPropertyMapping.ON_DEFAULT_VALUE)
 	MockMvcPrint print() default MockMvcPrint.DEFAULT;
@@ -66,6 +70,8 @@ public @interface AutoConfigureMockMvc {
 	/**
 	 * If {@link MvcResult} information should be printed only if the test fails.
 	 * @return {@code true} if printing only occurs on failure
+	 *
+	 * 测试接在仅在失败时打印。
 	 */
 	boolean printOnlyOnFailure() default true;
 
