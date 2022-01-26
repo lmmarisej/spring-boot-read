@@ -23,6 +23,8 @@ package org.springframework.boot.web.servlet;
  *
  * @author Stephane Nicoll
  * @since 2.0.0
+ *
+ * 调度类型。
  */
 public enum DispatcherType {
 

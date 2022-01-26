@@ -46,16 +46,20 @@ import org.springframework.security.web.context.AbstractSecurityWebApplicationIn
  * @author Phillip Webb
  * @author Andy Wilkinson
  * @since 1.3.0
+ *
+ * 配置安全框架的过滤器。
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @EnableConfigurationProperties(SecurityProperties.class)
 @ConditionalOnClass({ AbstractSecurityWebApplicationInitializer.class, SessionCreationPolicy.class })
-@AutoConfigureAfter(SecurityAutoConfiguration.class)
+@AutoConfigureAfter(SecurityAutoConfiguration.class)		// SecurityAutoConfiguration之后
 public class SecurityFilterAutoConfiguration {
 
 	private static final String DEFAULT_FILTER_NAME = AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME;
 
+	// 主要向容器注册DelegatingFilterProxyRegistrationBean，本质是ServletContextInitializer，用于向servlet3容器中注册DelegatingFilterProxy
+	// DelegatingFilterProxy生成基于某个bean的filter对象，容器接收请求委托给它
 	@Bean
 	@ConditionalOnBean(name = DEFAULT_FILTER_NAME)
 	public DelegatingFilterProxyRegistrationBean securityFilterChainRegistration(

@@ -76,12 +76,12 @@ public class SecurityProperties {
 	public static class Filter {
 
 		/**
-		 * Security filter chain order.
+		 * Security filter chain order.  过滤器链顺序。
 		 */
 		private int order = DEFAULT_FILTER_ORDER;
 
 		/**
-		 * Security filter chain dispatcher types.
+		 * Security filter chain dispatcher types.     过滤器链分发类型。
 		 */
 		private Set<DispatcherType> dispatcherTypes = new HashSet<>(
 				Arrays.asList(DispatcherType.ASYNC, DispatcherType.ERROR, DispatcherType.REQUEST));
@@ -112,7 +112,7 @@ public class SecurityProperties {
 		private String name = "user";
 
 		/**
-		 * Password for the default user name.
+		 * Password for the default user name.      随机密码
 		 */
 		private String password = UUID.randomUUID().toString();
 
@@ -151,6 +151,7 @@ public class SecurityProperties {
 			this.roles = new ArrayList<>(roles);
 		}
 
+		// 是否自动生成
 		public boolean isPasswordGenerated() {
 			return this.passwordGenerated;
 		}

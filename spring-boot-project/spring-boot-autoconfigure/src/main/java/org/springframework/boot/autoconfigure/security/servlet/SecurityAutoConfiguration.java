@@ -38,8 +38,8 @@ import org.springframework.security.authentication.DefaultAuthenticationEventPub
  * @since 1.0.0
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass(DefaultAuthenticationEventPublisher.class)
-@EnableConfigurationProperties(SecurityProperties.class)
+@ConditionalOnClass(DefaultAuthenticationEventPublisher.class)		// 必须有，
+@EnableConfigurationProperties(SecurityProperties.class)		// 安全配置
 @Import({ SpringBootWebSecurityConfiguration.class, WebSecurityEnablerConfiguration.class,
 		SecurityDataConfiguration.class })
 public class SecurityAutoConfiguration {

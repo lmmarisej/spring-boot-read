@@ -39,7 +39,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @ConditionalOnClass(WebSecurityConfigurerAdapter.class)
 @ConditionalOnMissingBean(WebSecurityConfigurerAdapter.class)
 @ConditionalOnWebApplication(type = Type.SERVLET)
-public class SpringBootWebSecurityConfiguration {
+public class SpringBootWebSecurityConfiguration {		// 针对使用security的web应用，注入一个DefaultConfigurerAdapter
 
 	@Configuration(proxyBeanMethods = false)
 	@Order(SecurityProperties.BASIC_AUTH_ORDER)

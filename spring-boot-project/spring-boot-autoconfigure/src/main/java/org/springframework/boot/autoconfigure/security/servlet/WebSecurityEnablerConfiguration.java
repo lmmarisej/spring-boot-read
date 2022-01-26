@@ -35,6 +35,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  *
  * @author Madhura Bhave
  * @since 2.0.0
+ *
+ * 代替@EnableWebSecurity，避免用户漏写。
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnBean(WebSecurityConfigurerAdapter.class)
