@@ -48,6 +48,7 @@ public class JarLauncher extends ExecutableArchiveLauncher {
 		return entry.getName().startsWith(BOOT_INF_LIB);
 	}
 
+	// 入口程序
 	public static void main(String[] args) throws Exception {
 		new JarLauncher().launch(args);
 	}

@@ -56,6 +56,7 @@ public abstract class ExecutableArchiveLauncher extends Launcher {
 		Manifest manifest = this.archive.getManifest();
 		String mainClass = null;
 		if (manifest != null) {
+			// 获取Start-Class配置的启动类方法
 			mainClass = manifest.getMainAttributes().getValue("Start-Class");
 		}
 		if (mainClass == null) {

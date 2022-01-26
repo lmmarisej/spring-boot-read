@@ -222,18 +222,23 @@ public class RepackageMojo extends AbstractDependencyFilterMojo {
 	}
 
 	private void repackage() throws MojoExecutionException {
-		Artifact source = getSourceArtifact();
-		File target = getTargetFile();
-		Repackager repackager = getRepackager(source.getFile());
+		Artifact source = getSourceArtifact();		// maven生成的，加original后缀
+		File target = getTargetFile();		// fat jar，可执行的
+		Repackager repackager = getRepackager(source.getFile());		// 将maven生成的重新打包为可执行的jar
+		// 过滤项目运行时依赖的jar
 		Set<Artifact> artifacts = filterDependencies(this.project.getArtifacts(), getFilters(getAdditionalFilters()));
+		// artifacts转libraries
 		Libraries libraries = new ArtifactsLibraries(artifacts, this.requiresUnpack, getLog());
 		try {
+			// SpringBoot启动脚本
 			LaunchScript launchScript = getLaunchScript();
+			// re to fat jar
 			repackager.repackage(target, libraries, launchScript);
 		}
 		catch (IOException ex) {
 			throw new MojoExecutionException(ex.getMessage(), ex);
 		}
+		// 更新maven jar
 		updateArtifact(source, target, repackager.getBackupFile());
 	}
 

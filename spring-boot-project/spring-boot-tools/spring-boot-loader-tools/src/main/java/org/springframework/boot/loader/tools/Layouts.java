@@ -59,6 +59,8 @@ public final class Layouts {
 
 	/**
 	 * Executable JAR layout.
+	 *
+	 * jar类型归档文件。
 	 */
 	public static class Jar implements RepackagingLayout {
 
@@ -67,6 +69,7 @@ public final class Layouts {
 			return "org.springframework.boot.loader.JarLauncher";
 		}
 
+		// 具体的依赖jar包
 		@Override
 		public String getLibraryDestination(String libraryName, LibraryScope scope) {
 			return "BOOT-INF/lib/";
@@ -77,6 +80,7 @@ public final class Layouts {
 			return "";
 		}
 
+		// 获取重新打包的class文件路径
 		@Override
 		public String getRepackagedClassesLocation() {
 			return "BOOT-INF/classes/";

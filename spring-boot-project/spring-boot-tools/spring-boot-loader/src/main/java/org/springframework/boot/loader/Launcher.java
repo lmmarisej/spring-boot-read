@@ -46,6 +46,7 @@ public abstract class Launcher {
 	 * @throws Exception if the application fails to launch
 	 */
 	protected void launch(String[] args) throws Exception {
+		// 将org.springframework.boot.loader追加到系统属性java.protocol.handler.pkgs
 		JarFile.registerUrlProtocolHandler();
 		ClassLoader classLoader = createClassLoader(getClassPathArchives());
 		launch(args, getMainClass(), classLoader);
@@ -56,6 +57,8 @@ public abstract class Launcher {
 	 * @param archives the archives
 	 * @return the classloader
 	 * @throws Exception if the classloader cannot be created
+	 *
+	 * 根据Archive的url获取ClassLoader。
 	 */
 	protected ClassLoader createClassLoader(List<Archive> archives) throws Exception {
 		List<URL> urls = new ArrayList<>(archives.size());
@@ -83,7 +86,9 @@ public abstract class Launcher {
 	 * @throws Exception if the launch fails
 	 */
 	protected void launch(String[] args, String mainClass, ClassLoader classLoader) throws Exception {
+		// 设置为线程上下文加载器
 		Thread.currentThread().setContextClassLoader(classLoader);
+		// 创建启动线程启动mainClass#main方法
 		createMainMethodRunner(mainClass, args, classLoader).run();
 	}
 
@@ -113,7 +118,9 @@ public abstract class Launcher {
 	protected abstract List<Archive> getClassPathArchives() throws Exception;
 
 	protected final Archive createArchive() throws Exception {
+		// 当前class信息
 		ProtectionDomain protectionDomain = getClass().getProtectionDomain();
+		// 当前归档文件路径
 		CodeSource codeSource = protectionDomain.getCodeSource();
 		URI location = (codeSource != null) ? codeSource.getLocation().toURI() : null;
 		String path = (location != null) ? location.getSchemeSpecificPart() : null;
@@ -121,9 +128,10 @@ public abstract class Launcher {
 			throw new IllegalStateException("Unable to determine code source archive");
 		}
 		File root = new File(path);
-		if (!root.exists()) {
+		if (!root.exists()) {		// 存在检查
 			throw new IllegalStateException("Unable to determine code source archive from " + root);
 		}
+		// 针对目录和jar处理
 		return (root.isDirectory() ? new ExplodedArchive(root) : new JarFileArchive(root));
 	}
 
