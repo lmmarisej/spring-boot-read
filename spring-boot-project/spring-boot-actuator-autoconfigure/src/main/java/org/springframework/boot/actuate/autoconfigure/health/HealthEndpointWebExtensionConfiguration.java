@@ -32,9 +32,11 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author Phillip Webb
  * @see HealthEndpointAutoConfiguration
+ *
+ * 针对HealthEndpoint的web扩展。
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnWebApplication(type = Type.SERVLET)		// 仅在SERVLET环境生效
 @ConditionalOnBean(HealthEndpoint.class)
 class HealthEndpointWebExtensionConfiguration {
 

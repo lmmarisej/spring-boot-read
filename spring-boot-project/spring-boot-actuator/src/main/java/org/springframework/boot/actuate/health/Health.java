@@ -47,6 +47,8 @@ import org.springframework.util.Assert;
  * @author Phillip Webb
  * @author Michael Pratt
  * @since 1.1.0
+ *
+ * 存储应用健康信息。
  */
 @JsonInclude(Include.NON_EMPTY)
 public final class Health extends HealthComponent {

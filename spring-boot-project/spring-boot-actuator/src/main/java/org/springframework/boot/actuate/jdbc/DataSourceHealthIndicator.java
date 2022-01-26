@@ -95,11 +95,11 @@ public class DataSourceHealthIndicator extends AbstractHealthIndicator implement
 
 	@Override
 	protected void doHealthCheck(Health.Builder builder) throws Exception {
-		if (this.dataSource == null) {
+		if (this.dataSource == null) {		// 数据源不存在
 			builder.up().withDetail("database", "unknown");
 		}
 		else {
-			doDataSourceHealthCheck(builder);
+			doDataSourceHealthCheck(builder);		// 存在则检测
 		}
 	}
 
@@ -126,6 +126,7 @@ public class DataSourceHealthIndicator extends AbstractHealthIndicator implement
 		return connection.getMetaData().getDatabaseProductName();
 	}
 
+	// 根据数据库名称获取对应验证语句
 	protected String getValidationQuery(String product) {
 		String query = this.query;
 		if (!StringUtils.hasText(query)) {

@@ -34,6 +34,8 @@ import org.springframework.boot.actuate.endpoint.http.ApiVersion;
  * @author Andy Wilkinson
  * @author Stephane Nicoll
  * @since 2.0.0
+ *
+ * 可扩展端点，暴露需要被监控的信息。
  */
 @Endpoint(id = "health")
 public class HealthEndpoint extends HealthEndpointSupport<HealthContributor, HealthComponent> {

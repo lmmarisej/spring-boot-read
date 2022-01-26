@@ -47,6 +47,8 @@ import org.springframework.boot.actuate.endpoint.EndpointId;
  * @see EndpointExtension
  * @see FilteredEndpoint
  * @see EndpointDiscoverer
+ *
+ * 声明actuator端点。
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

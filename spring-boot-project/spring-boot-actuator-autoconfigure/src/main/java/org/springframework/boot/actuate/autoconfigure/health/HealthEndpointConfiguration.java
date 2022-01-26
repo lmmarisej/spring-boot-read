@@ -51,18 +51,21 @@ import org.springframework.util.ClassUtils;
 @Configuration(proxyBeanMethods = false)
 class HealthEndpointConfiguration {
 
+	// 状态聚合
 	@Bean
 	@ConditionalOnMissingBean
 	StatusAggregator healthStatusAggregator(HealthEndpointProperties properties) {
 		return new SimpleStatusAggregator(properties.getStatus().getOrder());
 	}
 
+	// 映射health到http状态码
 	@Bean
 	@ConditionalOnMissingBean
 	HttpCodeStatusMapper healthHttpCodeStatusMapper(HealthEndpointProperties properties) {
 		return new SimpleHttpCodeStatusMapper(properties.getStatus().getHttpMapping());
 	}
 
+	// HealthEndpointGroups集合
 	@Bean
 	@ConditionalOnMissingBean
 	HealthEndpointGroups healthEndpointGroups(ApplicationContext applicationContext,
@@ -70,6 +73,7 @@ class HealthEndpointConfiguration {
 		return new AutoConfiguredHealthEndpointGroups(applicationContext, properties);
 	}
 
+	// HealthContributor可变注册
 	@Bean
 	@ConditionalOnMissingBean
 	HealthContributorRegistry healthContributorRegistry(ApplicationContext applicationContext,
@@ -82,6 +86,7 @@ class HealthEndpointConfiguration {
 		return new AutoConfiguredHealthContributorRegistry(healthContributors, groups.getNames());
 	}
 
+	// 用户暴露应用程序健康信息
 	@Bean
 	@ConditionalOnMissingBean
 	HealthEndpoint healthEndpoint(HealthContributorRegistry registry, HealthEndpointGroups groups) {

@@ -32,6 +32,8 @@ import org.springframework.core.annotation.AliasFor;
  * @author Andy Wilkinson
  * @author Phillip Webb
  * @since 2.0.0
+ *
+ * 公开方式。
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

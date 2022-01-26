@@ -78,10 +78,11 @@ public class DataSourceHealthContributorAutoConfiguration extends
 		this.poolMetadataProvider = new CompositeDataSourcePoolMetadataProvider(this.metadataProviders);
 	}
 
+	// 实例化HealthContributor
 	@Bean
 	@ConditionalOnMissingBean(name = { "dbHealthIndicator", "dbHealthContributor" })
 	public HealthContributor dbHealthContributor(Map<String, DataSource> dataSources) {
-		return createContributor(dataSources);
+		return createContributor(dataSources);		// 反射获取
 	}
 
 	@Override
@@ -89,6 +90,7 @@ public class DataSourceHealthContributorAutoConfiguration extends
 		if (source instanceof AbstractRoutingDataSource) {
 			return new RoutingDataSourceHealthIndicator();
 		}
+		// 实例化DataSourceHealthIndicator，以数据源和查询语句
 		return new DataSourceHealthIndicator(source, getValidationQuery(source));
 	}
 

@@ -23,6 +23,8 @@ package org.springframework.boot.actuate.health;
  * @author Dave Syer
  * @author Phillip Webb
  * @since 1.0.0
+ *
+ * 健康信息。
  */
 @FunctionalInterface
 public interface HealthIndicator extends HealthContributor {
