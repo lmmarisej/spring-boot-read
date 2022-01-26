@@ -49,15 +49,18 @@ import org.springframework.util.StringUtils;
  * @author Stephane Nicoll
  * @author Kazuki Shimizu
  * @since 1.0.0
+ *
+ * 如果暂时不需要数据源配置，可以通过自动配置的排除功能，将本类排除。
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass({ DataSource.class, EmbeddedDatabaseType.class })
-@EnableConfigurationProperties(DataSourceProperties.class)
-@Import({ DataSourcePoolMetadataProvidersConfiguration.class, DataSourceInitializationConfiguration.class })
+@ConditionalOnClass({ DataSource.class, EmbeddedDatabaseType.class })		// 环境条件符合
+@EnableConfigurationProperties(DataSourceProperties.class)		// 装配配置文件信息
+@Import({ DataSourcePoolMetadataProvidersConfiguration.class, DataSourceInitializationConfiguration.class })	// 引入自动配置类
 public class DataSourceAutoConfiguration {
 
+	// 内嵌数据库
 	@Configuration(proxyBeanMethods = false)
-	@Conditional(EmbeddedDatabaseCondition.class)
+	@Conditional(EmbeddedDatabaseCondition.class)		// 不能支持池化的数据源
 	@ConditionalOnMissingBean({ DataSource.class, XADataSource.class })
 	@Import(EmbeddedDataSourceConfiguration.class)
 	protected static class EmbeddedDatabaseConfiguration {
@@ -65,8 +68,9 @@ public class DataSourceAutoConfiguration {
 	}
 
 	@Configuration(proxyBeanMethods = false)
-	@Conditional(PooledDataSourceCondition.class)
+	@Conditional(PooledDataSourceCondition.class)		// 设置了spring.datasource.type或PooledDataSourceAvailableCondition。
 	@ConditionalOnMissingBean({ DataSource.class, XADataSource.class })
+	// 支持Hikari、Tomcat JDBC、Dbcp2三种DataSource
 	@Import({ DataSourceConfiguration.Hikari.class, DataSourceConfiguration.Tomcat.class,
 			DataSourceConfiguration.Dbcp2.class, DataSourceConfiguration.Generic.class,
 			DataSourceJmxConfiguration.class })
@@ -77,18 +81,22 @@ public class DataSourceAutoConfiguration {
 	/**
 	 * {@link AnyNestedCondition} that checks that either {@code spring.datasource.type}
 	 * is set or {@link PooledDataSourceAvailableCondition} applies.
+	 *
+	 * 检查是否设置了spring.datasource.type或PooledDataSourceAvailableCondition。
 	 */
 	static class PooledDataSourceCondition extends AnyNestedCondition {
 
 		PooledDataSourceCondition() {
-			super(ConfigurationPhase.PARSE_CONFIGURATION);
+			super(ConfigurationPhase.PARSE_CONFIGURATION);		// 表示被@Configuration注解的类是解析阶段的判断条件
 		}
 
+		// 配置条件判断
 		@ConditionalOnProperty(prefix = "spring.datasource", name = "type")
 		static class ExplicitType {
 
 		}
 
+		// 判断条件
 		@Conditional(PooledDataSourceAvailableCondition.class)
 		static class PooledDataSourceAvailable {
 
@@ -98,13 +106,16 @@ public class DataSourceAutoConfiguration {
 
 	/**
 	 * {@link Condition} to test if a supported connection pool is available.
+	 *
+	 * 检查类加载器中是否存在指定的数据源对象。
 	 */
 	static class PooledDataSourceAvailableCondition extends SpringBootCondition {
 
 		@Override
 		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 			ConditionMessage.Builder message = ConditionMessage.forCondition("PooledDataSource");
-			if (DataSourceBuilder.findType(context.getClassLoader()) != null) {
+			// 指定的类加载器中存在默认指定的数据源，存在则匹配
+			if (DataSourceBuilder.findType(context.getClassLoader()) != null) {		// 任意有一个就行
 				return ConditionOutcome.match(message.foundExactly("supported DataSource"));
 			}
 			return ConditionOutcome.noMatch(message.didNotFind("supported DataSource").atAll());
@@ -116,6 +127,8 @@ public class DataSourceAutoConfiguration {
 	 * {@link Condition} to detect when an embedded {@link DataSource} type can be used.
 	 * If a pooled {@link DataSource} is available, it will always be preferred to an
 	 * {@code EmbeddedDatabase}.
+	 *
+	 * 检测何时可以使用内嵌的DataSource。
 	 */
 	static class EmbeddedDatabaseCondition extends SpringBootCondition {
 
@@ -129,13 +142,16 @@ public class DataSourceAutoConfiguration {
 			if (hasDataSourceUrlProperty(context)) {
 				return ConditionOutcome.noMatch(message.because(DATASOURCE_URL_PROPERTY + " is set"));
 			}
+			// 支持池化的数据源，返回不匹配
 			if (anyMatches(context, metadata, this.pooledCondition)) {
 				return ConditionOutcome.noMatch(message.foundExactly("supported pooled data source"));
 			}
-			EmbeddedDatabaseType type = EmbeddedDatabaseConnection.get(context.getClassLoader()).getType();
+			// 判断是否存在合适的内嵌数据库类型。
+			EmbeddedDatabaseType type = EmbeddedDatabaseConnection.get(context.getClassLoader()).getType();	// cl下是否有SpringBoot支持的内嵌数据库
 			if (type == null) {
 				return ConditionOutcome.noMatch(message.didNotFind("embedded database").atAll());
 			}
+			// 枚举类中存在
 			return ConditionOutcome.match(message.found("embedded database").items(type));
 		}
 

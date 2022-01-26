@@ -31,10 +31,12 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
  * @author Stephane Nicoll
  * @since 1.0.0
  * @see DataSourceAutoConfiguration
+ *
+ * 对内嵌数据源进行配置。
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(DataSourceProperties.class)
-public class EmbeddedDataSourceConfiguration implements BeanClassLoaderAware {
+public class EmbeddedDataSourceConfiguration implements BeanClassLoaderAware {		// 需要用到类加载器
 
 	private ClassLoader classLoader;
 
@@ -43,8 +45,9 @@ public class EmbeddedDataSourceConfiguration implements BeanClassLoaderAware {
 		this.classLoader = classLoader;
 	}
 
-	@Bean(destroyMethod = "shutdown")
+	@Bean(destroyMethod = "shutdown")		// 单例，由spring容器管理其生命周期
 	public EmbeddedDatabase dataSource(DataSourceProperties properties) {
+		// 构建内嵌数据库
 		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseConnection.get(this.classLoader).getType())
 				.setName(properties.determineDatabaseName()).build();
 	}

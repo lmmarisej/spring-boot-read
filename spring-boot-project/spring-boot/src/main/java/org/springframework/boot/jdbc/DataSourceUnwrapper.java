@@ -48,6 +48,8 @@ public final class DataSourceUnwrapper {
 	 * @param target the type that the result must implement
 	 * @param <T> the target type
 	 * @return an object that implements the target type or {@code null}
+	 *
+	 * 提取被包装的数据源。
 	 */
 	public static <T> T unwrap(DataSource dataSource, Class<T> target) {
 		if (target.isInstance(dataSource)) {
@@ -60,7 +62,7 @@ public final class DataSourceUnwrapper {
 		if (DELEGATING_DATA_SOURCE_PRESENT) {
 			DataSource targetDataSource = DelegatingDataSourceUnwrapper.getTargetDataSource(dataSource);
 			if (targetDataSource != null) {
-				return unwrap(targetDataSource, target);
+				return unwrap(targetDataSource, target);		// 递归解包装
 			}
 		}
 		if (AopUtils.isAopProxy(dataSource)) {

@@ -34,6 +34,8 @@ import org.springframework.core.log.LogMessage;
  *
  * @author Stephane Nicoll
  * @see DataSourceAutoConfiguration
+ *
+ * 完成数据库相关的初始化操作。
  */
 class DataSourceInitializerInvoker implements ApplicationListener<DataSourceSchemaCreatedEvent>, InitializingBean {
 
@@ -49,6 +51,7 @@ class DataSourceInitializerInvoker implements ApplicationListener<DataSourceSche
 
 	private boolean initialized;
 
+	// 数据源、数据源配置信息
 	DataSourceInitializerInvoker(ObjectProvider<DataSource> dataSource, DataSourceProperties properties,
 			ApplicationContext applicationContext) {
 		this.dataSource = dataSource;
@@ -60,9 +63,10 @@ class DataSourceInitializerInvoker implements ApplicationListener<DataSourceSche
 	public void afterPropertiesSet() {
 		DataSourceInitializer initializer = getDataSourceInitializer();
 		if (initializer != null) {
+			// 执行DDL脚本，以初始化建表
 			boolean schemaCreated = this.dataSourceInitializer.createSchema();
 			if (schemaCreated) {
-				initialize(initializer);
+				initialize(initializer);		// DataSourceInitializer初始化
 			}
 		}
 	}
@@ -71,9 +75,9 @@ class DataSourceInitializerInvoker implements ApplicationListener<DataSourceSche
 		try {
 			this.applicationContext.publishEvent(new DataSourceSchemaCreatedEvent(initializer.getDataSource()));
 			// The listener might not be registered yet, so don't rely on it.
-			if (!this.initialized) {
+			if (!this.initialized) {		// 监听器可能未注册，只能自己手动搞了
 				this.dataSourceInitializer.initSchema();
-				this.initialized = true;
+				this.initialized = true;		// 避免多次执行
 			}
 		}
 		catch (IllegalStateException ex) {
@@ -86,7 +90,7 @@ class DataSourceInitializerInvoker implements ApplicationListener<DataSourceSche
 	public void onApplicationEvent(DataSourceSchemaCreatedEvent event) {
 		// NOTE the event can happen more than once and
 		// the event datasource is not used here
-		DataSourceInitializer initializer = getDataSourceInitializer();
+		DataSourceInitializer initializer = getDataSourceInitializer();		// 未使用事件源，避免事件多次发生
 		if (!this.initialized && initializer != null) {
 			initializer.initSchema();
 			this.initialized = true;
@@ -97,6 +101,7 @@ class DataSourceInitializerInvoker implements ApplicationListener<DataSourceSche
 		if (this.dataSourceInitializer == null) {
 			DataSource ds = this.dataSource.getIfUnique();
 			if (ds != null) {
+				// 基于properties初始化数据源
 				this.dataSourceInitializer = new DataSourceInitializer(ds, this.properties, this.applicationContext);
 			}
 		}

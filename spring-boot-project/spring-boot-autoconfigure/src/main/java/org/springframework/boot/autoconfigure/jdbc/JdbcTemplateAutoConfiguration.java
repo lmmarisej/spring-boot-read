@@ -37,12 +37,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * @author Stephane Nicoll
  * @author Kazuki Shimizu
  * @since 1.4.0
+ *
+ * 自动配置JdbcTemplate。
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnClass({ DataSource.class, JdbcTemplate.class })
+@ConditionalOnClass({ DataSource.class, JdbcTemplate.class })	   // cl下必须存在
 @ConditionalOnSingleCandidate(DataSource.class)
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@EnableConfigurationProperties(JdbcProperties.class)
+@AutoConfigureAfter(DataSourceAutoConfiguration.class)		// 有数据源之后
+@EnableConfigurationProperties(JdbcProperties.class)		// 指定配置
 @Import({ JdbcTemplateConfiguration.class, NamedParameterJdbcTemplateConfiguration.class })
 public class JdbcTemplateAutoConfiguration {
 

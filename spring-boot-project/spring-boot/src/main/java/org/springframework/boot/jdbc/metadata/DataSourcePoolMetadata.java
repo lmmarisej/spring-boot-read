@@ -40,6 +40,8 @@ public interface DataSourcePoolMetadata {
 	 * This may also return {@code null} if the data source does not provide the necessary
 	 * information to compute the poll usage.
 	 * @return the usage value or {@code null}
+	 *
+	 * 当前数据库连接池情况。
 	 */
 	Float getUsage();
 
@@ -47,6 +49,8 @@ public interface DataSourcePoolMetadata {
 	 * Return the current number of active connections that have been allocated from the
 	 * data source or {@code null} if that information is not available.
 	 * @return the number of active connections or {@code null}
+	 *
+	 * 已分配活跃数。
 	 */
 	Integer getActive();
 
@@ -56,6 +60,8 @@ public interface DataSourcePoolMetadata {
 	 * @return the number of established but idle connections or {@code null}
 	 * @since 2.2.0
 	 * @see #getActive()
+	 *
+	 * 建立的空闲连接。
 	 */
 	default Integer getIdle() {
 		return null;
@@ -66,6 +72,8 @@ public interface DataSourcePoolMetadata {
 	 * time or {@code -1} if there is no limit. Can also return {@code null} if that
 	 * information is not available.
 	 * @return the maximum number of active connections or {@code null}
+	 *
+	 * 同时可分配最大活跃数。
 	 */
 	Integer getMax();
 
@@ -73,6 +81,8 @@ public interface DataSourcePoolMetadata {
 	 * Return the minimum number of idle connections in the pool or {@code null} if that
 	 * information is not available.
 	 * @return the minimum number of active connections or {@code null}
+	 *
+	 * 返回连接池中最小空闲连接数。
 	 */
 	Integer getMin();
 
@@ -80,6 +90,8 @@ public interface DataSourcePoolMetadata {
 	 * Return the query to use to validate that a connection is valid or {@code null} if
 	 * that information is not available.
 	 * @return the validation query or {@code null}
+	 *
+	 * 查询以验证连接是否有效。
 	 */
 	String getValidationQuery();
 
@@ -88,6 +100,8 @@ public interface DataSourcePoolMetadata {
 	 * ({@code null}), default is JDBC driver default (If set to null then the
 	 * java.sql.Connection.setAutoCommit(boolean) method will not be called.)
 	 * @return the default auto-commit state or {@code null}
+	 *
+	 * 连接池创建的链接默认自动提交状态。不为null，默认采用JDBC驱动。
 	 */
 	Boolean getDefaultAutoCommit();
 

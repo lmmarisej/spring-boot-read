@@ -27,6 +27,8 @@ import org.springframework.core.type.AnnotationMetadata;
 /**
  * Configures DataSource initialization.
  *
+ * 配置数据源初始化。
+ *
  * @author Stephane Nicoll
  */
 @Configuration(proxyBeanMethods = false)
@@ -37,6 +39,8 @@ class DataSourceInitializationConfiguration {
 	 * {@link ImportBeanDefinitionRegistrar} to register the
 	 * {@link DataSourceInitializerPostProcessor} without causing early bean instantiation
 	 * issues.
+	 *
+	 * 注册DataSourceInitializerPostProcessor。
 	 */
 	static class Registrar implements ImportBeanDefinitionRegistrar {
 
@@ -45,13 +49,13 @@ class DataSourceInitializationConfiguration {
 		@Override
 		public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
 				BeanDefinitionRegistry registry) {
-			if (!registry.containsBeanDefinition(BEAN_NAME)) {
+			if (!registry.containsBeanDefinition(BEAN_NAME)) {		// 未注册，动态创建bean，并注册
 				GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
 				beanDefinition.setBeanClass(DataSourceInitializerPostProcessor.class);
 				beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 				// We don't need this one to be post processed otherwise it can cause a
 				// cascade of bean instantiation that we would rather avoid.
-				beanDefinition.setSynthetic(true);
+				beanDefinition.setSynthetic(true);		// 不需要对此对象进行后续处理，避免级联初始化
 				registry.registerBeanDefinition(BEAN_NAME, beanDefinition);
 			}
 		}

@@ -29,6 +29,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * Configuration for {@link JdbcTemplateConfiguration}.
  *
  * @author Stephane Nicoll
+ *
+ * 实例化JdbcTemplate。
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnMissingBean(JdbcOperations.class)

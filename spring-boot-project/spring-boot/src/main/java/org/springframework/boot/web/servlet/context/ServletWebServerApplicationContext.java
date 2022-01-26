@@ -178,11 +178,11 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 		ServletContext servletContext = getServletContext();
 		if (webServer == null && servletContext == null) {
 			ServletWebServerFactory factory = getWebServerFactory();
-			this.webServer = factory.getWebServer(getSelfInitializer());
+			this.webServer = factory.getWebServer(getSelfInitializer());		// 合并容器中的多个ServletContextInitializer到一个匿名对象，并注册到webServer
 		}
 		else if (servletContext != null) {
 			try {
-				getSelfInitializer().onStartup(servletContext);
+				getSelfInitializer().onStartup(servletContext);		// 调用这个匿名ServletContextInitializer，所有的ServletContextInitializer都将被调用
 			}
 			catch (ServletException ex) {
 				throw new ApplicationContextException("Cannot initialize servlet context", ex);

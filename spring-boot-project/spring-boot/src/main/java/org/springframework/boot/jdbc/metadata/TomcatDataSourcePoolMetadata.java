@@ -24,6 +24,8 @@ import org.apache.tomcat.jdbc.pool.DataSource;
  *
  * @author Stephane Nicoll
  * @since 2.0.0
+ *
+ * 围绕dataSource数据源信息展开，提供数据源信息。
  */
 public class TomcatDataSourcePoolMetadata extends AbstractDataSourcePoolMetadata<DataSource> {
 

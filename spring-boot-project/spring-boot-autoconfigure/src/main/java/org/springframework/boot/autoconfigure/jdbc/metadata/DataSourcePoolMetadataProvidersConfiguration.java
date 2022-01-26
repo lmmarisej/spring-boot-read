@@ -39,9 +39,10 @@ import org.springframework.context.annotation.Configuration;
 public class DataSourcePoolMetadataProvidersConfiguration {
 
 	@Configuration(proxyBeanMethods = false)
-	@ConditionalOnClass(org.apache.tomcat.jdbc.pool.DataSource.class)
+	@ConditionalOnClass(org.apache.tomcat.jdbc.pool.DataSource.class)		// tomcat的数据源
 	static class TomcatDataSourcePoolMetadataProviderConfiguration {
 
+		// 基于DataSource提供一个DataSourcePoolMetadataProvider
 		@Bean
 		DataSourcePoolMetadataProvider tomcatPoolDataSourceMetadataProvider() {
 			return (dataSource) -> {

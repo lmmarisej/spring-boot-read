@@ -88,6 +88,8 @@ class DataSourceInitializer {
 	 * Create the schema if necessary.
 	 * @return {@code true} if the schema was created
 	 * @see DataSourceProperties#getSchema()
+	 *
+	 * 建表。
 	 */
 	boolean createSchema() {
 		List<Resource> scripts = getScripts("spring.datasource.schema", this.properties.getSchema(), "schema");
@@ -106,6 +108,8 @@ class DataSourceInitializer {
 	/**
 	 * Initialize the schema if necessary.
 	 * @see DataSourceProperties#getData()
+	 *
+	 * 初始数据。
 	 */
 	void initSchema() {
 		List<Resource> scripts = getScripts("spring.datasource.data", this.properties.getData(), "data");

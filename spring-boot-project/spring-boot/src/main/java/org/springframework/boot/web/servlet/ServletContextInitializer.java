@@ -49,6 +49,8 @@ public interface ServletContextInitializer {
 	 * @param servletContext the {@code ServletContext} to initialize
 	 * @throws ServletException if any call against the given {@code ServletContext}
 	 * throws a {@code ServletException}
+	 *
+	 * 配置指定ServletContext所需的servlet、过滤器、监听器上下文参数和属性。
 	 */
 	void onStartup(ServletContext servletContext) throws ServletException;
 
